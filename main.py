@@ -10,6 +10,10 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None)
 
+with open('list_ip_azure.pickle', 'rb') as f:
+        azure_ip = pickle.load(f)
+        azure_ip = [ipaddress.ip_network(x) for x in azure_ip]
+
 @app.get("/")
 def hello(ip: Optional[str] = Query(None, regex="^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")):
 
@@ -17,10 +21,6 @@ def hello(ip: Optional[str] = Query(None, regex="^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{
         return {"message":"Hello! It is checker AzureIP"}
 
     ip = ipaddress.ip_address(ip)
-    with open('list_ip_azure.pickle', 'rb') as f:
-        azure_ip = pickle.load(f)
-
-    azure_ip = [ipaddress.ip_network(x) for x in azure_ip]
     for network in azure_ip:
         if ip in network:
             return {"azure": True, "message": f"{str(ip)} in {str(network)} Azure's network"}
