@@ -23,6 +23,5 @@ def hello(ip: Optional[str] = Query(None, regex="^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{
     azure_ip = [ipaddress.ip_network(x) for x in azure_ip]
     for network in azure_ip:
         if ip in network:
-            print(f'{str(ip)} in {str(network)}')
             return {"azure": True, "message": f"{str(ip)} in {str(network)} Azure's network"}
     return {"azure": False, "message": f"{str(ip)} not is Azure's IP"}
